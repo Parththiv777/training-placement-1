@@ -1,0 +1,28 @@
+class Solution(object):
+    def canFinish(self, numCourses, prerequisites):
+        
+        ## IF TOPOLOGICAL SORT RETURNS ALL NODES THEN TRUE ELSE FALSE
+        ### BASICALY THIS DIRECTED GRAPH SHOULD BE ACYCLIC FOR TAKING ALL COURSES
+        graph = {}
+        for i in range(numCourses):
+            graph[i]=[]
+
+        indegrees = [0]*numCourses
+        for p in prerequisites:
+            graph[p[1]].append(p[0])
+            indegrees[p[0]]+=1
+        visited = [False]*numCourses
+        from collections import deque
+        
+        q = deque()
+        for i in range(numCourses):
+            if indegrees[i]==0:
+                q.append(i)
+        while q:
+            o = q.popleft()
+            visited[o]= True
+            for n in graph[o]:
+                indegrees[n]-=1
+                if indegrees[n]==0:
+                    q.append(n)
+        return all(visited)
